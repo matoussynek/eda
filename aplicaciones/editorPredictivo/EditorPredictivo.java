@@ -112,7 +112,7 @@ public class EditorPredictivo extends ABB<String> {
 		s = sucesor(prefijo);
 		for(int i=1; i < n; i++) {
 		    if(s == null) break;
-		    lista.insertar(s);
+		    if (s.startsWith(prefijo)) lista.insertar(s);
 		    s = sucesor(s);
 		}
         return lista;

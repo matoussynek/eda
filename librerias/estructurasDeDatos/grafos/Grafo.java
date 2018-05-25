@@ -1,5 +1,9 @@
 package librerias.estructurasDeDatos.grafos;
 
+import librerias.estructurasDeDatos.modelos.ColaPrioridad;
+import librerias.estructurasDeDatos.modelos.MFSet;
+import librerias.estructurasDeDatos.jerarquicos.PriorityQColaPrioridad;
+import librerias.estructurasDeDatos.jerarquicos.ForestMFSet;
 import librerias.estructurasDeDatos.modelos.Cola;
 import librerias.estructurasDeDatos.modelos.ListaConPI;
 import librerias.estructurasDeDatos.lineales.LEGListaConPI;
@@ -188,8 +192,37 @@ public abstract class Grafo {
       *                   los numV vertices con coste minimo, o null 
       *                   si el grafo no es Conexo
      */  
-    public Arista[] kruskal() {       
-        // COMPLETAR EN LA SEGUNDA SESION
-        return null;
+    public Arista[] kruskal() {
+        Arista[] res = new Arista[numVertices()-1];
+        int sizeRes = 0;
+        ColaPrioridad<Arista> aristasFactibles = new PriorityQColaPrioridad<>();
+        
+        MFSet mf = new ForestMFSet(numVertices());
+        // Fill the aristasFactibles with all the aristas
+        aristasFactibles = getAristasFactiblesKruskal();
+        
+        while (sizeRes < numVertices()-1 &&  !aristasFactibles.esVacia()){
+            Arista ar = aristasFactibles.eliminarMin();
+            if (mf.find(ar.getOrigen()) != mf.find(ar.getDestino())){
+                mf.merge(ar.getOrigen() ,ar.getDestino());
+                res[sizeRes++] = ar;
+            }
+        }
+        
+        return (sizeRes == numVertices()-1) ? res : null;
+    }
+    
+    private ColaPrioridad<Arista> getAristasFactiblesKruskal() {
+        ColaPrioridad<Arista> aristasFactibles = new PriorityQColaPrioridad<>();
+        
+        for (int  i = 0; i < numVertices(); i++) {
+            ListaConPI<Adyacente> l = adyacentesDe(i);
+            for (l.inicio(); !l.esFin(); l.siguiente()) {
+                Adyacente ady = l.recuperar();
+                aristasFactibles.insertar(new Arista(i, ady.getDestino(), ady.getPeso())); 
+            }
+        }
+        
+        return aristasFactibles;
     }
 }

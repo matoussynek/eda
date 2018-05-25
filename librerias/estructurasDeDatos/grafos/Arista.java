@@ -5,7 +5,7 @@ package librerias.estructurasDeDatos.grafos;
  *  @version Mayo 2018
  */
  
-public class Arista {
+public class Arista implements Comparable<Arista> {
     
     // UNA Arista TIENE UN vertice origen y UN vertice destino:
     /*COMPLETAR*/
@@ -49,6 +49,12 @@ public class Arista {
      */
     public double getPeso() {
         return this.p; 
+    }
+    
+    @Override
+    public int compareTo(Arista o) {
+        double x = p - o.p;
+        return (int) x;
     }
     
     /** Devuelve un String que representa una arista
